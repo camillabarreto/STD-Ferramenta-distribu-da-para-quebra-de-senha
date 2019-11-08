@@ -18,7 +18,8 @@ import java.util.logging.Logger;
 public class Master {
 
     private static String nomeServidor = "127.0.0.1";
-    private static int porta = 12345;
+    private static int porta_n = 12345;
+    private static int porta_s = 12346;
     private static final String NOMEOBJDIST = "MeuServiço";
 
     public static void main(String[] args) {
@@ -27,7 +28,7 @@ public class Master {
                 nomeServidor = args[0];
             }
             if (args[1] != null){
-                porta = Integer.parseInt(args[1]);
+                porta_n = Integer.parseInt(args[1]);
             }
 
             // CRIANDO OBJETO DISTRIBUIDO PARA NOTIFICAÇÃO
@@ -39,13 +40,18 @@ public class Master {
                     UnicastRemoteObject.exportObject(n, 0);
 
             // CRIANDO SERVIÇO DE REGISTRO
-            Registry registro = LocateRegistry.createRegistry(porta);
+            Registry registro = LocateRegistry.createRegistry(porta_n);
 
             // REGISTRO DO OBJETO DISTRIBUIDO
             registro.bind(NOMEOBJDIST, stub_n);
 
             System.out.println("Servidor de NOTIFICAÇÃO pronto!\n");
             System.out.println("Pressione CTRL + C para encerrar...");
+
+            //==============================================================================
+            // Vou esperar algum trabalhador informar status: espera
+            // quando informar devo buscar o objeto que ele disponibilizou
+            // será solicitado para esse objeto a quebra de senha
 
         } catch (RemoteException | AlreadyBoundException ex) {
             Logger.getLogger(Master.class.getName()).log(Level.SEVERE, null, ex);
