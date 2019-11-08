@@ -18,9 +18,8 @@ import java.util.logging.Logger;
 public class Master {
 
     private static String nomeServidor = "127.0.0.1";
-    private static int porta_n = 12345;
-    private static int porta_s = 12346;
-    private static final String NOMEOBJDIST = "MeuServiço";
+    private static int porta = 12345;
+    private static final String NAMEMASTER = "Master";
 
     public static void main(String[] args) {
         try {
@@ -28,7 +27,7 @@ public class Master {
                 nomeServidor = args[0];
             }
             if (args[1] != null){
-                porta_n = Integer.parseInt(args[1]);
+                porta = Integer.parseInt(args[1]);
             }
 
             // CRIANDO OBJETO DISTRIBUIDO PARA NOTIFICAÇÃO
@@ -40,10 +39,10 @@ public class Master {
                     UnicastRemoteObject.exportObject(n, 0);
 
             // CRIANDO SERVIÇO DE REGISTRO
-            Registry registro = LocateRegistry.createRegistry(porta_n);
+            Registry registro = LocateRegistry.createRegistry(porta);
 
             // REGISTRO DO OBJETO DISTRIBUIDO
-            registro.bind(NOMEOBJDIST, stub_n);
+            registro.bind(NAMEMASTER, stub_n);
 
             System.out.println("Servidor de NOTIFICAÇÃO pronto!\n");
             System.out.println("Pressione CTRL + C para encerrar...");

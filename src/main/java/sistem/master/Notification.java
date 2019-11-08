@@ -7,7 +7,9 @@ public class Notification implements DistributedNotification{
     private static int i = 0;
 
     @Override
-    public String activated() throws RemoteException {
+    public String activated(String NAMESERVICE) throws RemoteException {
+        //recebo o nome do serviço que foi subido por um worker
+        //faço conexão com esse worker
         return "    ativando....";
     }
 
