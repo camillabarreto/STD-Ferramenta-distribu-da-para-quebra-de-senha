@@ -1,14 +1,13 @@
-package sistem.server;
+package sistem.worker;
 import sistem.DistributedService;
-
 import java.rmi.RemoteException;
 
 public class Service implements DistributedService{
     boolean status = false;
 
     @Override
-    public void submitJob() throws RemoteException {
-
+    public void submitJob(int i) throws RemoteException {
+        System.out.println("i : " + i);
     }
 
     @Override
