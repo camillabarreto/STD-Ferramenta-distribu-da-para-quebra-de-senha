@@ -24,8 +24,8 @@ public class Worker {
 
     private static String nomeServidor = "127.0.0.1";
     private static int porta = 12345;
-    private static String NAMEWORKER;
-    private static final String NAMEMASTER = "Master";
+    private static String WORKERNAME;
+    private static final String MASTERNAME = "Master";
 
     public static void main(String[] args) {
         try {
@@ -39,22 +39,20 @@ public class Worker {
                 porta = Integer.parseInt(args[1]);
             }
 
+            /*
+            *   CRIAR E REGISTRAR O OBJETO DISTRIBUIDO SERVICE
+            * */
+
             // BUSCANDO REFERENCIA DO SERVIÇO DE REGISTRO
             Registry registro = LocateRegistry.getRegistry(nomeServidor, porta);
 
-            // PROCURANDO OBJETO DE NOTIFICAÇÃO DISTRIBUIDO
-            DistributedNotification stub = (DistributedNotification) registro.lookup(NAMEMASTER);
-
-
-            //==============================================================================
-            // Aqui eu vou criar o objeto distribuido para realizar a quebra de senha
-            // e aguardar solicitações de trabalho
-
+            //SOLICITANDO NOME DO SERVIÇO
             Scanner teclado = new Scanner(System.in);
-            System.out.println("Informe nome do serviço: ");
-            NAMEWORKER = teclado.nextLine();
-
-            // CRIANDO OBJETO DISTRIBUIDO PARA NOTIFICAÇÃO
+            System.out.println("Informe nome do worker: ");
+            WORKERNAME = teclado.nextLine();
+            //System.out.println(nomeServidor);
+           // System.out.println(porta);
+            // CRIANDO OBJETO DISTRIBUIDO
             Service s = new Service();
 
             // DEFININDO O HOSTNAME DO SERVIDOR
@@ -62,22 +60,24 @@ public class Worker {
             DistributedService stub_s = (DistributedService)
                     UnicastRemoteObject.exportObject(s, 0);
 
-            // REGISTRO DO OBJETO DISTRIBUIDO
-            registro.bind(NAMEWORKER, stub_s);
+            // REGISTRANDO OBJETO DISTRIBUIDO
+            registro.bind(WORKERNAME, stub_s);
 
             System.out.println("Servidor de QUEBRA DE SENHA pronto!\n");
-            System.out.println("Pressione CTRL + C para encerrar...");
 
-            System.out.println("------------------------------------------------");
-            System.out.println("Informar ao Master o status: em espera");
-            //chamar metodo do obj Notification
+            /*
+             *   BUSCAR O OBJETO DISTRIBUIDO NOTIFICATION DO MASTER
+             * */
 
-            //=========================================================
+            // PROCURANDO OBJETO DISTRIBUIDO
 
-            System.out.println("activated...");
+            DistributedNotification stub = (DistributedNotification) registro.lookup(MASTERNAME);
 
-            System.out.println(stub.activated(NAMEWORKER));
-            System.out.println(stub.workFinished());
+            /*
+            *   INFORMAR AO MASTER O NOME DO SERVICE
+            * */
+
+            System.out.println(stub.activate(WORKERNAME));
 
 
         } catch (RemoteException | NotBoundException ex) {
