@@ -24,7 +24,7 @@ public class Worker {
 
     private static String nomeServidor = "127.0.0.1";
     private static int porta = 12345;
-    private static String WORKERNAME;
+    static String WORKERNAME;
     private static final String MASTERNAME = "Master";
 
     public static void main(String[] args) {
@@ -70,8 +70,10 @@ public class Worker {
              * */
 
             // PROCURANDO OBJETO DISTRIBUIDO
-
-            DistributedNotification stub = (DistributedNotification) registro.lookup(MASTERNAME);
+            DistributedNotification stub = null;
+            while(stub == null){
+                stub = (DistributedNotification) registro.lookup(MASTERNAME);
+            }
 
             /*
              *   INFORMAR AO MASTER O NOME DO SERVICE
@@ -97,6 +99,5 @@ public class Worker {
             e.printStackTrace();
         }
     }
-
 
 }

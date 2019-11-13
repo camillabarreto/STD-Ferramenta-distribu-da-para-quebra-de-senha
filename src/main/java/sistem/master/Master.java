@@ -56,46 +56,38 @@ public class Master {
     }
 
     private static void userInterface() throws RemoteException {
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                Scanner teclado = new Scanner(System.in);
-                while(true){
-                    System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
-                    System.out.println("(2) Para enviar tarefas ou arquivos");
-                    System.out.println("(3) Para solicitar o encerramento de tarefas");
-                    switch (teclado.nextInt()){
-                        case 1:
-                            //percorrer workers e informar seus status
-                            try {
-                                System.out.println("1 : " + workers.get(0).sendFile());
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 2:
-                            try {
-                                System.out.println("2 : " + workers.get(0).sendFile());
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-                        case 3:
-                            try {
-                                System.out.println("3 : " + workers.get(0).sendFile());
-                            } catch (RemoteException e) {
-                                e.printStackTrace();
-                            }
-                            break;
-
-                            default:
-                                System.out.println("Default");
+        Scanner teclado = new Scanner(System.in);
+        while (true) {
+            System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
+            System.out.println("(2) Para enviar tarefas ou arquivos");
+            System.out.println("(3) Para solicitar o encerramento de tarefas");
+            switch (teclado.nextInt()) {
+                case 1:
+                    //percorrer workers e informar seus status
+                    try {
+                        System.out.println("1 : " + workers.get(0).sendFile());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
                     }
-                }
+                    break;
+                case 2:
+                    try {
+                        System.out.println("2 : " + workers.get(1).sendFile());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case 3:
+                    try {
+                        System.out.println("3 : " + workers.get(2).sendFile());
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                default:
+                    System.out.println("Default");
             }
-        }.start();
-
+        }
     }
-
 }

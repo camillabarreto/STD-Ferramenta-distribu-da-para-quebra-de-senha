@@ -1,14 +1,11 @@
 package sistem.worker;
+import com.sun.corba.se.spi.orbutil.threadpool.NoSuchWorkQueueException;
+import com.sun.corba.se.spi.orbutil.threadpool.Work;
 import sistem.DistributedService;
 import java.rmi.RemoteException;
 
 public class Service implements DistributedService{
     boolean workingStatus = false;
-
-//    @Override
-//    public boolean isWorkingStatus() {
-//        return workingStatus;
-//    }
 
     @Override
     public void sendWork(int i) throws RemoteException {
@@ -22,6 +19,6 @@ public class Service implements DistributedService{
 
     @Override
     public String sendFile() throws RemoteException {
-        return "retornando...";
+        return Worker.WORKERNAME + " retornando...";
     }
 }
