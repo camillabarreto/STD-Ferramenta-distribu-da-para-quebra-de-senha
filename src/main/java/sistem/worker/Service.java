@@ -3,24 +3,25 @@ import sistem.DistributedService;
 import java.rmi.RemoteException;
 
 public class Service implements DistributedService{
-    boolean status = false;
+    boolean workingStatus = false;
 
-//    public Service(boolean status) {
-//        this.status = status;
+//    @Override
+//    public boolean isWorkingStatus() {
+//        return workingStatus;
 //    }
 
     @Override
-    public void submitJob(int i) throws RemoteException {
+    public void sendWork(int i) throws RemoteException {
+        //somente para workers que estejam em estado de espera
         System.out.println("i : " + i);
+    }
+
+    @Override
+    public void stopWork() throws RemoteException {
     }
 
     @Override
     public String sendFile() throws RemoteException {
         return "retornando...";
-    }
-
-    @Override
-    public boolean stopNotification() throws RemoteException {
-        return true;
     }
 }

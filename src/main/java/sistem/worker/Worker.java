@@ -40,8 +40,8 @@ public class Worker {
             }
 
             /*
-            *   CRIAR E REGISTRAR O OBJETO DISTRIBUIDO SERVICE
-            * */
+             *   CRIAR E REGISTRAR O OBJETO DISTRIBUIDO SERVICE
+             * */
 
             // BUSCANDO REFERENCIA DO SERVIÇO DE REGISTRO
             Registry registro = LocateRegistry.getRegistry(nomeServidor, porta);
@@ -51,7 +51,7 @@ public class Worker {
             System.out.println("Informe nome do worker: ");
             WORKERNAME = teclado.nextLine();
             //System.out.println(nomeServidor);
-           // System.out.println(porta);
+            // System.out.println(porta);
             // CRIANDO OBJETO DISTRIBUIDO
             Service s = new Service();
 
@@ -74,11 +74,22 @@ public class Worker {
             DistributedNotification stub = (DistributedNotification) registro.lookup(MASTERNAME);
 
             /*
-            *   INFORMAR AO MASTER O NOME DO SERVICE
-            * */
+             *   INFORMAR AO MASTER O NOME DO SERVICE
+             * */
 
+            //as vezes da erro nessa linha
             System.out.println(stub.activate(WORKERNAME));
-
+            //erro:
+//            nov 13, 2019 2:41:24 PM sistem.worker.Worker main
+//            GRAVE: null
+//            java.rmi.NoSuchObjectException: no such object in table
+//            at sun.rmi.transport.StreamRemoteCall.exceptionReceivedFromServer(StreamRemoteCall.java:283)
+//            at sun.rmi.transport.StreamRemoteCall.executeCall(StreamRemoteCall.java:260)
+//            at sun.rmi.server.UnicastRef.invoke(UnicastRef.java:161)
+//            at java.rmi.server.RemoteObjectInvocationHandler.invokeRemoteMethod(RemoteObjectInvocationHandler.java:227)
+//            at java.rmi.server.RemoteObjectInvocationHandler.invoke(RemoteObjectInvocationHandler.java:179)
+//            at com.sun.proxy.$Proxy1.activate(Unknown Source)
+//            at sistem.worker.Worker.main(Worker.java:81)
 
         } catch (RemoteException | NotBoundException ex) {
             Logger.getLogger(Worker.class.getName()).log(Level.SEVERE, null, ex);
