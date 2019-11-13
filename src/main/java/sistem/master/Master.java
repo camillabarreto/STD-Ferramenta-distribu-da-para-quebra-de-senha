@@ -67,33 +67,34 @@ public class Master {
                     //percorrer workers e informar seus status
                     System.out.println("Workers online : " + workers.size());
                     for(DistributedService d : workers){
-                        System.out.println(d.getName() + " : " + d.getStatus());
+                        System.out.print(d.getName() + " : ");
+                        if(d.getStatus()) System.out.println("trabalhando");
+                        else System.out.println("em espera");
                     }
-//                    try {
-//                        System.out.println("1 : " + workers.get(0).sendFile());
-//                    } catch (RemoteException e) {
-//                        e.printStackTrace();
-//                    }
                     break;
                 case 2:
-                    try {
-                        System.out.println("2 : " + workers.get(1).sendFile());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                    System.out.println("Enviando tarefa para: ");
+                    for(DistributedService d : workers){
+                        if(!d.getStatus()){
+                            System.out.println(d.getName());
+                            d.sendWork();
+                        }
                     }
                     break;
                 case 3:
-                    try {
-                        System.out.println("3 : " + workers.get(2).sendFile());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                    System.out.println("Solicitando encerramento de tarefa para: ");
+                    for(DistributedService d : workers){
+                        if(d.getStatus()){
+                            System.out.println(d.getName());
+                            d.stopWork();
+                        }
                     }
                     break;
 
                 default:
                     System.out.println("Default");
             }
-            System.out.println("\n------------------------------------------------\n");
+            System.out.println("\n------------------------------------------------------------------------\n");
         }
     }
 }

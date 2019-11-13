@@ -8,9 +8,9 @@ import java.rmi.RemoteException;
  */
 public interface DistributedService extends Remote{
     //public boolean isWorkingStatus();
-    public void sendWork(int i) throws RemoteException;
+    public void sendWork() throws RemoteException;
     public void stopWork() throws RemoteException;
-    public String sendFile() throws RemoteException;
+    public void sendFile() throws RemoteException;
     public String getName() throws RemoteException;
-    public String getStatus() throws RemoteException;
+    public boolean getStatus() throws RemoteException;
 }

@@ -3,7 +3,7 @@ import sistem.DistributedService;
 import java.rmi.RemoteException;
 
 public class Service implements DistributedService{
-    private String workingStatus = "em espera";
+    private boolean workingStatus = false;
     private String serviceName;
 
     public Service(String serviceName) {
@@ -11,18 +11,18 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public void sendWork(int i) throws RemoteException {
+    public void sendWork() throws RemoteException {
         //somente para workers que estejam em estado de espera
-        System.out.println("i : " + i);
+        workingStatus = true;
     }
 
     @Override
     public void stopWork() throws RemoteException {
+        workingStatus = false;
     }
 
     @Override
-    public String sendFile() throws RemoteException {
-        return Worker.WORKERNAME + " retornando...";
+    public void sendFile() throws RemoteException {
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public String getStatus() throws RemoteException {
+    public boolean getStatus() throws RemoteException {
         return workingStatus;
     }
 }

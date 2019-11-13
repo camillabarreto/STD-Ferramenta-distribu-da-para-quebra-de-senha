@@ -57,8 +57,11 @@ public class Worker {
 
             // DEFININDO O HOSTNAME DO SERVIDOR
             System.setProperty("java.rmi.worker.hostname", nomeServidor);
-            DistributedService stub_s = (DistributedService)
-                    UnicastRemoteObject.exportObject(s, 0);
+            DistributedService stub_s = null;
+            while(stub_s == null){
+                stub_s = (DistributedService)
+                        UnicastRemoteObject.exportObject(s, 0);
+            }
 
             // REGISTRANDO OBJETO DISTRIBUIDO
             registro.bind(WORKERNAME, stub_s);
