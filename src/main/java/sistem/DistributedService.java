@@ -11,4 +11,6 @@ public interface DistributedService extends Remote{
     public void sendWork(int i) throws RemoteException;
     public void stopWork() throws RemoteException;
     public String sendFile() throws RemoteException;
+    public String getName() throws RemoteException;
+    public String getStatus() throws RemoteException;
 }

@@ -53,7 +53,7 @@ public class Worker {
             //System.out.println(nomeServidor);
             // System.out.println(porta);
             // CRIANDO OBJETO DISTRIBUIDO
-            Service s = new Service();
+            Service s = new Service(WORKERNAME);
 
             // DEFININDO O HOSTNAME DO SERVIDOR
             System.setProperty("java.rmi.worker.hostname", nomeServidor);
@@ -74,6 +74,7 @@ public class Worker {
             while(stub == null){
                 stub = (DistributedNotification) registro.lookup(MASTERNAME);
             }
+
 
             /*
              *   INFORMAR AO MASTER O NOME DO SERVICE

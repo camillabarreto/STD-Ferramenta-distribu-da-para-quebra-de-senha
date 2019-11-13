@@ -9,6 +9,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -64,11 +65,15 @@ public class Master {
             switch (teclado.nextInt()) {
                 case 1:
                     //percorrer workers e informar seus status
-                    try {
-                        System.out.println("1 : " + workers.get(0).sendFile());
-                    } catch (RemoteException e) {
-                        e.printStackTrace();
+                    System.out.println("Workers online : " + workers.size());
+                    for(DistributedService d : workers){
+                        System.out.println(d.getName() + " : " + d.getStatus());
                     }
+//                    try {
+//                        System.out.println("1 : " + workers.get(0).sendFile());
+//                    } catch (RemoteException e) {
+//                        e.printStackTrace();
+//                    }
                     break;
                 case 2:
                     try {
@@ -88,6 +93,7 @@ public class Master {
                 default:
                     System.out.println("Default");
             }
+            System.out.println("\n------------------------------------------------\n");
         }
     }
 }
