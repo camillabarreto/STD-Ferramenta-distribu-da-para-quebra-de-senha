@@ -21,7 +21,7 @@ public class Master {
 
     private static final String NAMEMASTER = "Master";
     private static String SERVER = "127.0.0.1";
-    private static int PORT = 12345;
+    private static int PORT = 12346;
     static ArrayList<DistributedService> workers = new ArrayList<>();
     //static HashMap<String, DistributedService> workers = new HashMap<>();
     static Registry registro;
@@ -67,35 +67,81 @@ public class Master {
                 case 1:
                     //percorrer workers e informar seus status
                     System.out.println("Workers online : " + workers.size());
-                    for(DistributedService d : workers){
-                        System.out.print(d.getName() + " : ");
-                        if(d.getStatus()) System.out.println("trabalhando");
-                        else System.out.println("em espera");
-                    }
+                    System.out.println(workersOnline());
                     break;
                 case 2:
-                    System.out.println("Enviando tarefa para: ");
-                    for(DistributedService d : workers){
-                        if(!d.getStatus()){
-                            System.out.println(d.getName());
-                            d.sendWork();
-                        }
-                    }
+                    System.out.println("Processos em espera : ");
+                    System.out.println(isWorking(false));
+                    System.out.println("Digite o nome do processo que deseja enviar a tarefa");
+                    System.out.println("Digite 'all' para enviar tarefa para todos os processos em espera");
+                    sendWorks(teclado.next());
                     break;
                 case 3:
-                    System.out.println("Solicitando encerramento de tarefa para: ");
-                    for(DistributedService d : workers){
-                        if(d.getStatus()){
-                            System.out.println(d.getName());
-                            d.stopWork();
-                        }
-                    }
+                    System.out.println("Processos trabalhando: ");
+                    System.out.println(isWorking(true));
+                    System.out.println("Digite o nome do processo que deseja finalizar a tarefa");
+                    System.out.println("Digite 'all' para finalizar a tarefa de todos os processos");
+                    stopWorks(teclado.next());
                     break;
 
                 default:
-                    System.out.println("Default");
+                    System.out.println("Operação inválida");
             }
             System.out.println("\n------------------------------------------------------------------------\n");
         }
     }
+
+    private static String workersOnline() throws RemoteException {
+        StringBuilder s = new StringBuilder();
+        for(DistributedService d : workers){
+            s.append(d.getName() + " : ");
+            if(d.isWorkingStatus()) s.append("trabalhando\n");
+            else s.append("em espera\n");
+        }
+        return s.toString();
+    }
+
+    private static String isWorking(boolean op) throws RemoteException {
+        StringBuilder s = new StringBuilder();
+        for(DistributedService d : workers){
+            if(d.isWorkingStatus() == op){
+                s.append(d.getName()+"\n");
+            }
+        }
+        return s.toString();
+    }
+
+    private static void sendWorks(String op) throws RemoteException {
+        if(op.equals("all")){
+            for(DistributedService d : workers){
+                if(!d.isWorkingStatus()) {
+                    d.sendWork();
+                }
+            }
+
+        }else{
+            for(DistributedService d : workers){
+                if(!d.isWorkingStatus() && d.getName().equals(op)){
+                    d.sendWork();
+                }
+            }
+        }
+    }
+
+    private static void stopWorks(String op) throws RemoteException {
+        if(op.equals("all")){
+            for(DistributedService d : workers){
+                if(d.isWorkingStatus()){
+                    d.stopWork();
+                }
+            }
+        }else{
+            for(DistributedService d : workers){
+                if(d.isWorkingStatus() && d.getName().equals(op)){
+                    d.stopWork();
+                }
+            }
+        }
+    }
+
 }

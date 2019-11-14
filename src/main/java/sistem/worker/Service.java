@@ -33,7 +33,7 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public boolean getStatus() throws RemoteException {
+    public boolean isWorkingStatus() throws RemoteException {
         return workingStatus;
     }
 }
