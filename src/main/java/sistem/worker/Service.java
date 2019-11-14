@@ -12,7 +12,8 @@ public class Service implements DistributedService{
 
     @Override
     public void sendWork() throws RemoteException {
-        //somente para workers que estejam em estado de espera
+        Worker.passwordBreaker = new PasswordBreaker();
+        Worker.passwordBreaker.start();
         workingStatus = true;
     }
 

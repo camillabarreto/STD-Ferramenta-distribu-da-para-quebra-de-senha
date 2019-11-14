@@ -25,6 +25,7 @@ public class Worker {
     private static int PORT = 12345;
     static String WORKERNAME;
     private static final String MASTERNAME = "Master";
+    static PasswordBreaker passwordBreaker = null;
 
     public static void main(String[] args) {
         try {
