@@ -19,6 +19,7 @@ public class Service implements DistributedService{
 
     @Override
     public void stopWork() throws RemoteException {
+        Worker.passwordBreaker.stop();
         workingStatus = false;
     }
 
