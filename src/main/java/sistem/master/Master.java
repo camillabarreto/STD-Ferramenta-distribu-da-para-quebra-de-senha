@@ -23,8 +23,7 @@ public class Master {
     private static String SERVER = "127.0.0.1";
     private static int PORT = 12346;
     static ArrayList<DistributedService> workers = new ArrayList<>();
-    //static HashMap<String, DistributedService> workers = new HashMap<>();
-    static Registry registro;
+    static Registry registro = null;
 
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException {
