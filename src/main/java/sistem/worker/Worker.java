@@ -12,7 +12,6 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 //thread para conexao
 //thread para processamento
 //atributo status: espera ou trabalhando
@@ -22,8 +21,8 @@ import java.util.logging.Logger;
 
 public class Worker {
 
-    private static String nomeServidor = "127.0.0.1";
-    private static int porta = 12345;
+    private static String SERVER = "127.0.0.1";
+    private static int PORT = 12345;
     static String WORKERNAME;
     private static final String MASTERNAME = "Master";
 
@@ -31,12 +30,12 @@ public class Worker {
         try {
             // recebendo nome do servidor por argumento de linha de comando
             if (args[0] != null){
-                nomeServidor = args[0];
+                SERVER = args[0];
             }
 
-            // recebendo porta do rmiregistry por argumento de linha de comando
+            // recebendo PORT do rmiregistry por argumento de linha de comando
             if (args[1] != null){
-                porta = Integer.parseInt(args[1]);
+                PORT = Integer.parseInt(args[1]);
             }
 
             /*
@@ -44,19 +43,19 @@ public class Worker {
              * */
 
             // BUSCANDO REFERENCIA DO SERVIÇO DE REGISTRO
-            Registry registro = LocateRegistry.getRegistry(nomeServidor, porta);
+            Registry registro = LocateRegistry.getRegistry(SERVER, PORT);
 
             //SOLICITANDO NOME DO SERVIÇO
             Scanner teclado = new Scanner(System.in);
             System.out.println("Informe nome do worker: ");
             WORKERNAME = teclado.nextLine();
-            //System.out.println(nomeServidor);
-            // System.out.println(porta);
+            //System.out.println(SERVER);
+            // System.out.println(PORT);
             // CRIANDO OBJETO DISTRIBUIDO
             Service s = new Service(WORKERNAME);
 
             // DEFININDO O HOSTNAME DO SERVIDOR
-            System.setProperty("java.rmi.worker.hostname", nomeServidor);
+            System.setProperty("java.rmi.worker.hostname", SERVER);
             DistributedService stub_s = null;
             while(stub_s == null){
                 stub_s = (DistributedService)
