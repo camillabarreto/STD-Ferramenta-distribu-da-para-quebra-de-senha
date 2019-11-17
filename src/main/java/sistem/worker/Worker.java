@@ -15,10 +15,10 @@ public class Worker {
     private static final String MASTERNAME = "Master";
     private static String SERVER = "127.0.0.1";
     private static int PORT = 12346;
-     static String WORKERNAME;
     private static Registry registro = null;
-    private static DistributedNotification masterStub = null;
-    private static DistributedService workerStub = null;
+    static String WORKERNAME;
+    static DistributedNotification masterStub = null;
+    static DistributedService workerStub = null;
     static Thread passwordBreaker = null;
     static Process process = null;
     //static BufferedWriter bw = null;
@@ -44,14 +44,7 @@ public class Worker {
 
         // CRIANDO OBJETO DISTRIBUIDO
         Service s = new Service(WORKERNAME);
-
-        // DEFININDO O HOSTNAME DO SERVIDOR
-        System.setProperty("java.rmi.worker.hostname", SERVER);
-
-        while(workerStub == null){
-            workerStub = (DistributedService)
-                    UnicastRemoteObject.exportObject(s, 0);
-        }
+        workerStub = (DistributedService) UnicastRemoteObject.exportObject(s, 0);
 
         // REGISTRANDO OBJETO DISTRIBUIDO
         registro.bind(WORKERNAME, workerStub);
@@ -59,9 +52,8 @@ public class Worker {
 
     private static void findMaster() throws RemoteException, NotBoundException {
         // PROCURANDO OBJETO DISTRIBUIDO
-        while(masterStub == null){
-            masterStub = (DistributedNotification) registro.lookup(MASTERNAME);
-        }masterStub.activate(WORKERNAME);
+        masterStub = (DistributedNotification) registro.lookup(MASTERNAME);
+        masterStub.activate(WORKERNAME);
     }
 
 }

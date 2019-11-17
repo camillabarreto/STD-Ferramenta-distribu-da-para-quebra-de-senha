@@ -9,10 +9,11 @@ public class PasswordBreaker extends Thread {
         super.run();
         System.out.println("quebrando senha...");
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("john","/home/camilla/senha.txt");
+        processBuilder.command("john","senha_"+Worker.WORKERNAME+".txt");
         try {
             Worker.process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(Worker.process.getInputStream()));
+
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
@@ -21,39 +22,27 @@ public class PasswordBreaker extends Thread {
             int exitCode = Worker.process.waitFor();
             System.out.println("\nExited with error code : " + exitCode);
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        //processBuilder.command("john","--show","/home/camilla/senha.txt");
-        processBuilder.command("pwd");
-        try {
-            Process process = processBuilder.start();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            processBuilder.command("john","--show","senha_"+Worker.WORKERNAME+".txt");
 
-            String line;
+            Worker.process = processBuilder.start();
+            reader = new BufferedReader(new InputStreamReader(Worker.process.getInputStream()));
+
+            line = null;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
             }
 
-            int exitCode = process.waitFor();
+            exitCode = Worker.process.waitFor();
             System.out.println("\nExited with error code : " + exitCode);
+
+            System.out.println("parando...");
+            Worker.workerStub.stopWork();
+            Worker.masterStub.workFinished(Worker.WORKERNAME);
 
         } catch (IOException e) {
             e.printStackTrace();
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        while (true){
-            System.out.println("... quebrando senha");
-
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 

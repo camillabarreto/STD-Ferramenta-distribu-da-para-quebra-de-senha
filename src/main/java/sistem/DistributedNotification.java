@@ -1,5 +1,4 @@
 package sistem;
-
 import java.rmi.NotBoundException;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -8,6 +7,6 @@ import java.rmi.RemoteException;
  * Interface compartilhada entre servidor e cliente
  */
 public interface DistributedNotification extends Remote {
-    public void activate(String WORKERNAME) throws RemoteException, NotBoundException;
-    public void workFinished(String WORKERNAME) throws RemoteException;
+    void activate(String WORKERNAME) throws RemoteException, NotBoundException;
+    void workFinished(String WORKERNAME);
 }

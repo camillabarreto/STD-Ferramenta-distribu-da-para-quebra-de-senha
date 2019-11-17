@@ -30,9 +30,7 @@ public class Master {
     }
 
     private static void createRegistryService() throws RemoteException {
-        while (registro == null){
-            registro = LocateRegistry.createRegistry(PORT);
-        }
+        registro = LocateRegistry.createRegistry(PORT);
     }
 
     private static void offerDistributedObject() throws RemoteException, AlreadyBoundException {
@@ -41,11 +39,7 @@ public class Master {
 
         // DEFININDO O HOSTNAME DO SERVIDOR
         System.setProperty("java.rmi.worker.hostname", SERVER);
-        DistributedNotification stub_n = null;
-        while(stub_n == null){
-            stub_n = (DistributedNotification)
-                    UnicastRemoteObject.exportObject(n, 0);
-        }
+        DistributedNotification stub_n = (DistributedNotification) UnicastRemoteObject.exportObject(n, 0);
 
         // REGISTRO DO OBJETO DISTRIBUIDO
         registro.bind(NAMEMASTER, stub_n);

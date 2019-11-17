@@ -19,7 +19,7 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public void stopWork() throws InterruptedException {
+    public void stopWork() {
         Worker.passwordBreaker.interrupt();
         Worker.passwordBreaker.stop();
         workingStatus = false;

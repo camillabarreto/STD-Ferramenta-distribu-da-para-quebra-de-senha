@@ -9,14 +9,12 @@ public class Notification  implements DistributedNotification{
     @Override
     public void activate(String WORKERNAME) throws RemoteException, NotBoundException {
         //ADICIONANDO A LISTA DE WORKERS
-        DistributedService d = null;
-        while(d == null){
-            d = (DistributedService) Master.registro.lookup(WORKERNAME);
-        }
-        Master.workers.add(d);
+        Master.workers.add((DistributedService) Master.registro.lookup(WORKERNAME));
     }
 
     @Override
-    public void workFinished(String WORKERNAME) throws RemoteException {
+    public void workFinished(String WORKERNAME) {
+        System.out.println("teste");
+        System.out.println(WORKERNAME + " finalizou a quebra de senha");
     }
 }
