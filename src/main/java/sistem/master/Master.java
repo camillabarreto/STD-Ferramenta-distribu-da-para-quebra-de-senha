@@ -1,8 +1,7 @@
 package sistem.master;
-
 import sistem.DistributedNotification;
 import sistem.DistributedService;
-
+import java.io.IOException;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -10,12 +9,6 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-
-//conhecimento de quantos workers estão online
-//conhecimento de seus respectivos status
-//enviar tarefas e arquivos para os workers
-//notificar encerramento de tarefa para um ou mais workers que estão em status: trabalhando
 
 public class Master {
 
@@ -26,7 +19,7 @@ public class Master {
     static Registry registro = null;
 
 
-    public static void main(String[] args) throws RemoteException, AlreadyBoundException {
+    public static void main(String[] args) throws IOException, AlreadyBoundException {
         if (args[0] != null) SERVER = args[0];
         if (args[1] != null) PORT = Integer.parseInt(args[1]);
         createRegistryService();
@@ -37,7 +30,9 @@ public class Master {
     }
 
     private static void createRegistryService() throws RemoteException {
-        registro = LocateRegistry.createRegistry(PORT);
+        while (registro == null){
+            registro = LocateRegistry.createRegistry(PORT);
+        }
     }
 
     private static void offerDistributedObject() throws RemoteException, AlreadyBoundException {
@@ -56,7 +51,7 @@ public class Master {
         registro.bind(NAMEMASTER, stub_n);
     }
 
-    private static void userInterface() throws RemoteException {
+    private static void userInterface() throws IOException {
         Scanner teclado = new Scanner(System.in);
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
@@ -110,10 +105,12 @@ public class Master {
         return s.toString();
     }
 
-    private static void sendWorks(String op) throws RemoteException {
+    private static void sendWorks(String op) throws IOException {
         if(op.equals("all")){
             for(DistributedService d : workers){
                 if(!d.isWorkingStatus()) {
+                    //StringBuilder s = new StringBuilder("teste all");
+                    //d.sendFile(s);
                     d.sendWork();
                 }
             }
@@ -121,6 +118,8 @@ public class Master {
         }else{
             for(DistributedService d : workers){
                 if(!d.isWorkingStatus() && d.getName().equals(op)){
+                    //StringBuilder s = new StringBuilder("teste w");
+                    //d.sendFile(s);
                     d.sendWork();
                 }
             }

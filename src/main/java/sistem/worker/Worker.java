@@ -1,7 +1,7 @@
 package sistem.worker;
 import sistem.DistributedNotification;
 import sistem.DistributedService;
-
+import java.io.BufferedWriter;
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -9,13 +9,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Scanner;
-
-//thread para conexao
-//thread para processamento
-//atributo status: espera ou trabalhando
-//recebe arquivos: dicionario ou senhas
-//recebe comandos do master para encerrar tarefa
-//notificar master quando a tarefa for concluida
 
 public class Worker {
 
@@ -27,6 +20,9 @@ public class Worker {
     private static DistributedNotification masterStub = null;
     private static DistributedService workerStub = null;
     static Thread passwordBreaker = null;
+    static BufferedWriter bw = null;
+    //static FileWriter f = null;
+    //static BufferedReader br = new BufferedReader(new FileReader(“c:/arquivo.html”));
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
         if (args[0] != null) SERVER = args[0];
@@ -34,19 +30,7 @@ public class Worker {
         searchRegistryService();
         offerDistributedObject();
         System.out.println("Servidor de QUEBRA DE SENHA pronto!\n");
-        findMaster();
-        System.out.println(masterStub.activate(WORKERNAME));
-        //erro:
-//            nov 13, 2019 2:41:24 PM sistem.worker.Worker main
-//            GRAVE: null
-//            java.rmi.NoSuchObjectException: no such object in table
-//            at sun.rmi.transport.StreamRemoteCall.exceptionReceivedFromServer(StreamRemoteCall.java:283)
-//            at sun.rmi.transport.StreamRemoteCall.executeCall(StreamRemoteCall.java:260)
-//            at sun.rmi.server.UnicastRef.invoke(UnicastRef.java:161)
-//            at java.rmi.server.RemoteObjectInvocationHandler.invokeRemoteMethod(RemoteObjectInvocationHandler.java:227)
-//            at java.rmi.server.RemoteObjectInvocationHandler.invoke(RemoteObjectInvocationHandler.java:179)
-//            at com.sun.proxy.$Proxy1.activate(Unknown Source)
-//            at sistem.worker.Worker.main(Worker.java:81)
+        findMaster(); //erro ocasional
     }
 
     private static void searchRegistryService() throws RemoteException {
@@ -78,7 +62,7 @@ public class Worker {
         // PROCURANDO OBJETO DISTRIBUIDO
         while(masterStub == null){
             masterStub = (DistributedNotification) registro.lookup(MASTERNAME);
-        }
+        }masterStub.activate(WORKERNAME);
     }
 
 }

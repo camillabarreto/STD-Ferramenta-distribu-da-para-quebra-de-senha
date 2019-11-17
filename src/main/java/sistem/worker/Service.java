@@ -1,6 +1,6 @@
 package sistem.worker;
 import sistem.DistributedService;
-import java.rmi.RemoteException;
+import java.io.*;
 
 public class Service implements DistributedService{
     private boolean workingStatus = false;
@@ -11,29 +11,33 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public void sendWork() throws RemoteException {
+    public void sendWork() {
+        //DISPARANDO UMA THREAD PARA QUEBRA DE SENHA
         Worker.passwordBreaker = new PasswordBreaker();
         Worker.passwordBreaker.start();
         workingStatus = true;
     }
 
     @Override
-    public void stopWork() throws RemoteException {
+    public void stopWork() {
         Worker.passwordBreaker.stop();
         workingStatus = false;
     }
 
     @Override
-    public void sendFile() throws RemoteException {
+    public void sendFile(StringBuilder s) throws IOException {
+        BufferedWriter bfw = new BufferedWriter(new FileWriter("/home/camilla/teste_"+Worker.WORKERNAME+".txt"));
+        bfw.append(s.toString());
+        bfw.close();
     }
 
     @Override
-    public String getName() throws RemoteException {
+    public String getName() {
         return serviceName;
     }
 
     @Override
-    public boolean isWorkingStatus() throws RemoteException {
+    public boolean isWorkingStatus() {
         return workingStatus;
     }
 }
