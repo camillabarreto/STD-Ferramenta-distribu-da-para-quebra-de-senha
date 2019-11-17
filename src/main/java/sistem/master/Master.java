@@ -19,7 +19,7 @@ public class Master {
     static Registry registro = null;
 
 
-    public static void main(String[] args) throws IOException, AlreadyBoundException {
+    public static void main(String[] args) throws IOException, AlreadyBoundException, InterruptedException {
         if (args[0] != null) SERVER = args[0];
         if (args[1] != null) PORT = Integer.parseInt(args[1]);
         createRegistryService();
@@ -51,7 +51,7 @@ public class Master {
         registro.bind(NAMEMASTER, stub_n);
     }
 
-    private static void userInterface() throws IOException {
+    private static void userInterface() throws IOException, InterruptedException {
         Scanner teclado = new Scanner(System.in);
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
@@ -126,7 +126,7 @@ public class Master {
         }
     }
 
-    private static void stopWorks(String op) throws RemoteException {
+    private static void stopWorks(String op) throws RemoteException, InterruptedException {
         if(op.equals("all")){
             for(DistributedService d : workers){
                 if(d.isWorkingStatus()){

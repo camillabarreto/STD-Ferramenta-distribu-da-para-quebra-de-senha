@@ -20,9 +20,8 @@ public class Worker {
     private static DistributedNotification masterStub = null;
     private static DistributedService workerStub = null;
     static Thread passwordBreaker = null;
-    static BufferedWriter bw = null;
-    //static FileWriter f = null;
-    //static BufferedReader br = new BufferedReader(new FileReader(“c:/arquivo.html”));
+    static Process process = null;
+    //static BufferedWriter bw = null;
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
         if (args[0] != null) SERVER = args[0];
