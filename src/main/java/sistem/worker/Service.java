@@ -5,7 +5,7 @@ import java.io.*;
 public class Service implements DistributedService{
     private boolean workingStatus = false;
     private String serviceName;
-    private String operationMode;  //   (0)dicionário, (1)incremental
+    private String operationMode;  //   (1)dicionário, (2)incremental
 
     public Service(String serviceName) {
         this.serviceName = serviceName;

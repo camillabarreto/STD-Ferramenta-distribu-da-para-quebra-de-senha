@@ -11,8 +11,8 @@ public class PasswordBreaker extends Thread {
         System.out.println("quebrando senha...");
         ProcessBuilder processBuilder = new ProcessBuilder();
         try {
-            if(Worker.workerStub.getOperationMode().equals("0")){
-                processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
+            if(Worker.workerStub.getOperationMode().equals("1")){
+                processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME, "--wordlist:"+Worker.WORKERNAME+"_dic.txt");
             }else{
                 processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
             }

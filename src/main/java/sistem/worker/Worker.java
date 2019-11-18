@@ -21,7 +21,6 @@ public class Worker {
     static DistributedService workerStub = null;
     static Thread passwordBreaker = null;
     static Process process = null;
-    //static BufferedWriter bw = null;
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
         if (args[0] != null) SERVER = args[0];

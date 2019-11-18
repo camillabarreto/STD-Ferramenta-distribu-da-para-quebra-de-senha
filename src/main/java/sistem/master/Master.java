@@ -10,6 +10,7 @@ import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Master {
 
@@ -17,6 +18,7 @@ public class Master {
     private static String SERVER = "127.0.0.1";
     private static int PORT = 12346;
     static ArrayList<DistributedService> workers = new ArrayList<>();
+    //static Vector<DistributedService> workers = new Vector<>();
     static Registry registro = null;
 
 
