@@ -51,7 +51,7 @@ public class Master {
         Scanner teclado = new Scanner(System.in);
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
-            System.out.println("(2) Para enviar tarefas ou arquivos");
+            System.out.println("(2) Para enviar tarefa + arquivo de senhas");
             System.out.println("(3) Para enviar o dicionario");
             System.out.println("(4) Para solicitar o encerramento de tarefas");
             switch (teclado.nextInt()) {
