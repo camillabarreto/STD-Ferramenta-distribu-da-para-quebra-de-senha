@@ -2,6 +2,7 @@ package sistem.worker;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.rmi.RemoteException;
 
 public class PasswordBreaker extends Thread {
     @Override
@@ -9,8 +10,13 @@ public class PasswordBreaker extends Thread {
         super.run();
         System.out.println("quebrando senha...");
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
         try {
+            if(Worker.workerStub.getOperationMode().equals("0")){
+                processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
+            }else{
+                processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
+            }
+
             Worker.process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(Worker.process.getInputStream()));
 

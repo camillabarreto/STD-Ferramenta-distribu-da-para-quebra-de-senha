@@ -50,46 +50,91 @@ public class Master {
         Scanner teclado = new Scanner(System.in);
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
-            System.out.println("(2) Para enviar tarefa + arquivo de senhas");
-            System.out.println("(3) Para enviar o dicionario");
+            System.out.println("(2) Para enviar tarefa para um processo específico");
+            System.out.println("(3) Para enviar tarefa para todos os processos");
             System.out.println("(4) Para solicitar o encerramento de tarefas");
+            String passwordPath, op, dictionaryPath, process, worker;
             switch (teclado.nextInt()) {
                 case 1:
-                    //percorrer workers e informar seus status
-                    System.out.println("Processos online : " + workers.size());
+                    System.out.println("\nPROCESSOS ONLINE : " + workers.size());
                     System.out.println(workersOnline());
+
                     break;
+
                 case 2:
-                    System.out.println("Processos em espera : ");
-                    System.out.println(isWorking(false));
-                    System.out.println("Digite o nome do processo que deseja enviar a tarefa");
-                    System.out.println("Digite 'all' para enviar tarefa para todos os processos em espera");
-                    String op2 = teclado.next();
-                    System.out.println("Digite o caminho completo para o arquivo de senhas");
-                    String path2 = teclado.next();
-                    sendWorks(op2, path2);
+                    worker = isWorking(false);
+                    if(worker.length() == 0){
+                        System.out.println("\nNÃO HÁ PROCESSOS EM ESPERA");
+                        break;
+                    }
+                    System.out.println("\nPROCESSOS EM ESPERA : ");
+                    System.out.println(worker);
+
+                    System.out.println("Digite o NOME DO PROCESSO que deseja ENVIAR a tarefa");
+                    process = teclado.next();
+
+                    System.out.println("Digite o CAMINHO COMPLETO para o arquivo de SENHAS");
+                    passwordPath = teclado.next();
+
+                    System.out.println("Escolha a OPÇÃO de quebra de senha : ");
+                    System.out.println("(1) Dicionário");
+                    System.out.println("(2) Incremental");
+                    op = teclado.next();
+                    if(op.equals("1")){
+                        System.out.println("Digite o CAMINHO COMPLETO para o arquivo de DICIONARIO");
+                        dictionaryPath = teclado.next();
+                        sendDictionaryFile(process, dictionaryPath);
+                    }
+                    sendWork(process, passwordPath, op);
+
                     break;
+
                 case 3:
-                    System.out.println("Processos em espera : ");
-                    System.out.println(isWorking(false));
-                    System.out.println("Digite o nome do processo que deseja enviar o dicionario");
-                    System.out.println("Digite 'all' para enviar para todos os processos");
-                    String op3 = teclado.next();
-                    System.out.println("Digite o caminho completo para o arquivo de dicionario");
-                    String path3 = teclado.next();
-                    sendDictionaryFile(op3, path3);
+                    worker = isWorking(false);
+                    if(worker.length() == 0){
+                        System.out.println("\nNÃO HÁ PROCESSOS EM ESPERA");
+                        break;
+                    }
+                    System.out.println("\nPROCESSOS EM ESPERA : ");
+                    System.out.println(worker);
+
+                    System.out.println("Digite o CAMINHO COMPLETO para o arquivo de SENHAS");
+                    passwordPath = teclado.next();
+
+                    for(DistributedService w : workers){
+                        if(!w.isWorkingStatus()){
+                            System.out.println("\nPROCESSO : "+w.getName());
+                            System.out.println("Escolha a OPÇÃO de quebra de senha : ");
+                            System.out.println("(1) Dicionário");
+                            System.out.println("(2) Incremental");
+                            op = teclado.next();
+                            if(op.equals("1")){
+                                System.out.println("Digite o CAMINHO COMPLETO para o arquivo de DICIONARIO");
+                                dictionaryPath = teclado.next();
+                                sendDictionaryFile(w.getName(), dictionaryPath);
+                            }
+                            sendWork(w.getName(), passwordPath, op);
+                        }
+                    }
+
                     break;
                 case 4:
-                    System.out.println("Processos trabalhando: ");
-                    System.out.println(isWorking(true));
-                    System.out.println("Digite o nome do processo que deseja finalizar a tarefa");
-                    System.out.println("Digite 'all' para finalizar a tarefa de todos os processos");
-                    stopWorks(teclado.next());
+                    worker = isWorking(true);
+                    if(worker.length() == 0){
+                        System.out.println("\nNÃO HÁ PROCESSOS TRABALHANDO");
+                        break;
+                    }
+                    System.out.println("\nPROCESSOS TRABALHANDO: ");
+                    System.out.println(worker);
+
+                    System.out.println("Digite o NOME DO PROCESSO que deseja FINALIZAR a tarefa");
+                    System.out.println("Digite 'all' para FINALIZAR TODOS os processos");
+                    stopWork(teclado.next());
                     break;
                 default:
-                    System.out.println("Operação inválida");
+                    System.out.println("\n-- Operação inválida --");
             }
-            System.out.println("\n------------------------------------------------------------------------\n");
+            System.out.println("------------------------------------------------------------------------\n");
         }
     }
 
@@ -113,34 +158,22 @@ public class Master {
         return s.toString();
     }
 
-    private static void sendWorks(String op, String path) throws IOException {
+    private static void sendWork(String process, String passwordPath, String op) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(passwordPath));
         while(bufferedReader.ready()){
             stringBuilder.append(bufferedReader.readLine()+"\n");
         }bufferedReader.close();
 
-        if(op.equals("all")){
-            for(DistributedService d : workers){
-                if(!d.isWorkingStatus()) {
-                    //StringBuilder s = new StringBuilder("teste all");
-                    //d.sendDictionaryFile(s);
-                    d.sendWork(stringBuilder);
-                }
-            }
-
-        }else{
-            for(DistributedService d : workers){
-                if(!d.isWorkingStatus() && d.getName().equals(op)){
-                    //StringBuilder s = new StringBuilder("teste w");
-                    //d.sendDictionaryFile(s);
-                    d.sendWork(stringBuilder);
-                }
+        for(DistributedService d : workers){
+            if(d.getName().equals(process)){
+                d.sendWork(stringBuilder, op);
+                break;
             }
         }
     }
 
-    private static void stopWorks(String op) throws RemoteException, InterruptedException {
+    private static void stopWork(String op) throws RemoteException, InterruptedException {
         if(op.equals("all")){
             for(DistributedService d : workers){
                 if(d.isWorkingStatus()){
@@ -156,24 +189,17 @@ public class Master {
         }
     }
 
-    private static void sendDictionaryFile(String op, String path) throws IOException {
+    private static void sendDictionaryFile(String process, String dictionaryPath) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(dictionaryPath));
         while(bufferedReader.ready()){
             stringBuilder.append(bufferedReader.readLine()+"\n");
         }bufferedReader.close();
 
-        if(op.equals("all")){
-            for(DistributedService d : workers){
-                if(!d.isWorkingStatus()){
-                    d.sendFile(stringBuilder);
-                }
-            }
-        }else{
-            for(DistributedService d : workers){
-                if(!d.isWorkingStatus() && d.getName().equals(op)){
-                    d.sendFile(stringBuilder);
-                }
+        for(DistributedService d : workers){
+            if(d.getName().equals(process)){
+                d.sendDictionary(stringBuilder);
+                break;
             }
         }
     }

@@ -7,9 +7,10 @@ import java.rmi.RemoteException;
  * Interface compartilhada entre servidor e cliente
  */
 public interface DistributedService extends Remote{
-    void sendWork(StringBuilder stringBuilder) throws IOException;
+    void sendWork(StringBuilder stringBuilder, String op) throws IOException;
     void stopWork() throws RemoteException;
-    void sendFile(StringBuilder stringBuilder) throws IOException;
+    void sendDictionary(StringBuilder stringBuilder) throws IOException;
     String getName() throws RemoteException;
+    String getOperationMode() throws RemoteException;
     boolean isWorkingStatus() throws RemoteException;
 }
