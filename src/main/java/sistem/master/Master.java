@@ -109,12 +109,18 @@ public class Master {
     }
 
     private static void sendWorks(String op) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/camilla/senhas.txt"));
+        while(bufferedReader.ready()){
+            stringBuilder.append(bufferedReader.readLine()+"\n");
+        }bufferedReader.close();
+
         if(op.equals("all")){
             for(DistributedService d : workers){
                 if(!d.isWorkingStatus()) {
                     //StringBuilder s = new StringBuilder("teste all");
                     //d.sendFile(s);
-                    d.sendWork();
+                    d.sendWork(stringBuilder);
                 }
             }
 
@@ -123,7 +129,7 @@ public class Master {
                 if(!d.isWorkingStatus() && d.getName().equals(op)){
                     //StringBuilder s = new StringBuilder("teste w");
                     //d.sendFile(s);
-                    d.sendWork();
+                    d.sendWork(stringBuilder);
                 }
             }
         }

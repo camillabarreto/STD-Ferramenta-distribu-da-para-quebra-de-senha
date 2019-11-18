@@ -9,7 +9,7 @@ public class PasswordBreaker extends Thread {
         super.run();
         System.out.println("quebrando senha...");
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("john","senha_"+Worker.WORKERNAME+".txt", "--session="+Worker.WORKERNAME);
+        processBuilder.command("john",Worker.WORKERNAME+"_senhas.txt", "--session="+Worker.WORKERNAME);
         try {
             Worker.process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(Worker.process.getInputStream()));

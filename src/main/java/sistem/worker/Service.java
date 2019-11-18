@@ -11,7 +11,13 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public void sendWork() {
+    public void sendWork(StringBuilder stringBuilder) throws IOException {
+        System.out.println("......recebendo arquivo de senhas");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_senhas.txt"));
+        bufferedWriter.append(stringBuilder.toString());
+        bufferedWriter.close();
+        System.out.println("......OK");
+
         //DISPARANDO UMA THREAD PARA QUEBRA DE SENHA
         Worker.passwordBreaker = new PasswordBreaker();
         Worker.passwordBreaker.start();
@@ -27,7 +33,7 @@ public class Service implements DistributedService{
 
     @Override
     public void sendFile(StringBuilder stringBuilder) throws IOException {
-        System.out.println("......receive File");
+        System.out.println("......recebendo dicionario");
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_dic.txt"));
         bufferedWriter.append(stringBuilder.toString());
         bufferedWriter.close();
