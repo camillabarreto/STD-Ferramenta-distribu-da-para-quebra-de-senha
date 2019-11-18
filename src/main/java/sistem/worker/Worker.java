@@ -44,6 +44,7 @@ public class Worker {
 
         // CRIANDO OBJETO DISTRIBUIDO
         Service s = new Service(WORKERNAME);
+        System.setProperty("java.rmi.worker.hostname", SERVER);
         workerStub = (DistributedService) UnicastRemoteObject.exportObject(s, 0);
 
         // REGISTRANDO OBJETO DISTRIBUIDO

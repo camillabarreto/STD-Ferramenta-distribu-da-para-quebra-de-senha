@@ -8,5 +8,5 @@ import java.rmi.RemoteException;
  */
 public interface DistributedNotification extends Remote {
     void activate(String WORKERNAME) throws RemoteException, NotBoundException;
-    void workFinished(String WORKERNAME);
+    void workFinished(String WORKERNAME) throws RemoteException;
 }
