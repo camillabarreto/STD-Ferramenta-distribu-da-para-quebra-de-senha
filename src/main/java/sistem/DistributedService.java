@@ -9,7 +9,7 @@ import java.rmi.RemoteException;
 public interface DistributedService extends Remote{
     void sendWork() throws RemoteException;
     void stopWork() throws RemoteException;
-    void sendFile(StringBuilder s) throws IOException;
+    void sendFile(StringBuilder stringBuilder) throws IOException;
     String getName() throws RemoteException;
     boolean isWorkingStatus() throws RemoteException;
 }

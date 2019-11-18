@@ -26,10 +26,11 @@ public class Service implements DistributedService{
     }
 
     @Override
-    public void sendFile(StringBuilder s) throws IOException {
-        BufferedWriter bfw = new BufferedWriter(new FileWriter("/home/camilla/teste_"+Worker.WORKERNAME+".txt"));
-        bfw.append(s.toString());
-        bfw.close();
+    public void sendFile(StringBuilder stringBuilder) throws IOException {
+        System.out.println("......receive File");
+        BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_dic.txt"));
+        bufferedWriter.append(stringBuilder.toString());
+        bufferedWriter.close();
     }
 
     @Override

@@ -1,7 +1,9 @@
 package sistem.master;
 import sistem.DistributedNotification;
 import sistem.DistributedService;
-import java.io.IOException;
+import sistem.worker.Worker;
+
+import java.io.*;
 import java.rmi.AlreadyBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
@@ -50,11 +52,12 @@ public class Master {
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
             System.out.println("(2) Para enviar tarefas ou arquivos");
-            System.out.println("(3) Para solicitar o encerramento de tarefas");
+            System.out.println("(3) Para enviar o dicionario");
+            System.out.println("(4) Para solicitar o encerramento de tarefas");
             switch (teclado.nextInt()) {
                 case 1:
                     //percorrer workers e informar seus status
-                    System.out.println("Workers online : " + workers.size());
+                    System.out.println("Processos online : " + workers.size());
                     System.out.println(workersOnline());
                     break;
                 case 2:
@@ -65,13 +68,19 @@ public class Master {
                     sendWorks(teclado.next());
                     break;
                 case 3:
+                    System.out.println("Processos em espera : ");
+                    System.out.println(isWorking(false));
+                    System.out.println("Digite o nome do processo que deseja enviar o dicionario");
+                    System.out.println("Digite 'all' para enviar para todos os processos");
+                    sendFile(teclado.next());
+                    break;
+                case 4:
                     System.out.println("Processos trabalhando: ");
                     System.out.println(isWorking(true));
                     System.out.println("Digite o nome do processo que deseja finalizar a tarefa");
                     System.out.println("Digite 'all' para finalizar a tarefa de todos os processos");
                     stopWorks(teclado.next());
                     break;
-
                 default:
                     System.out.println("Operação inválida");
             }
@@ -131,6 +140,28 @@ public class Master {
             for(DistributedService d : workers){
                 if(d.isWorkingStatus() && d.getName().equals(op)){
                     d.stopWork();
+                }
+            }
+        }
+    }
+
+    private static void sendFile(String op) throws IOException {
+        StringBuilder stringBuilder = new StringBuilder();
+        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/camilla/dic.txt"));
+        while(bufferedReader.ready()){
+            stringBuilder.append(bufferedReader.readLine()+"\n");
+        }bufferedReader.close();
+
+        if(op.equals("all")){
+            for(DistributedService d : workers){
+                if(!d.isWorkingStatus()){
+                    d.sendFile(stringBuilder);
+                }
+            }
+        }else{
+            for(DistributedService d : workers){
+                if(!d.isWorkingStatus() && d.getName().equals(op)){
+                    d.sendFile(stringBuilder);
                 }
             }
         }
