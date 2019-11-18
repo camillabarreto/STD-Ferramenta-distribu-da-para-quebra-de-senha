@@ -1,7 +1,6 @@
 package sistem.master;
 import sistem.DistributedNotification;
 import sistem.DistributedService;
-import sistem.worker.Worker;
 
 import java.io.*;
 import java.rmi.AlreadyBoundException;
@@ -65,14 +64,20 @@ public class Master {
                     System.out.println(isWorking(false));
                     System.out.println("Digite o nome do processo que deseja enviar a tarefa");
                     System.out.println("Digite 'all' para enviar tarefa para todos os processos em espera");
-                    sendWorks(teclado.next());
+                    String op2 = teclado.next();
+                    System.out.println("Digite o caminho completo para o arquivo de senhas");
+                    String path2 = teclado.next();
+                    sendWorks(op2, path2);
                     break;
                 case 3:
                     System.out.println("Processos em espera : ");
                     System.out.println(isWorking(false));
                     System.out.println("Digite o nome do processo que deseja enviar o dicionario");
                     System.out.println("Digite 'all' para enviar para todos os processos");
-                    sendFile(teclado.next());
+                    String op3 = teclado.next();
+                    System.out.println("Digite o caminho completo para o arquivo de dicionario");
+                    String path3 = teclado.next();
+                    sendDictionaryFile(op3, path3);
                     break;
                 case 4:
                     System.out.println("Processos trabalhando: ");
@@ -108,9 +113,9 @@ public class Master {
         return s.toString();
     }
 
-    private static void sendWorks(String op) throws IOException {
+    private static void sendWorks(String op, String path) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/camilla/senhas.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
         while(bufferedReader.ready()){
             stringBuilder.append(bufferedReader.readLine()+"\n");
         }bufferedReader.close();
@@ -119,7 +124,7 @@ public class Master {
             for(DistributedService d : workers){
                 if(!d.isWorkingStatus()) {
                     //StringBuilder s = new StringBuilder("teste all");
-                    //d.sendFile(s);
+                    //d.sendDictionaryFile(s);
                     d.sendWork(stringBuilder);
                 }
             }
@@ -128,7 +133,7 @@ public class Master {
             for(DistributedService d : workers){
                 if(!d.isWorkingStatus() && d.getName().equals(op)){
                     //StringBuilder s = new StringBuilder("teste w");
-                    //d.sendFile(s);
+                    //d.sendDictionaryFile(s);
                     d.sendWork(stringBuilder);
                 }
             }
@@ -151,9 +156,9 @@ public class Master {
         }
     }
 
-    private static void sendFile(String op) throws IOException {
+    private static void sendDictionaryFile(String op, String path) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new FileReader("/home/camilla/dic.txt"));
+        BufferedReader bufferedReader = new BufferedReader(new FileReader(path));
         while(bufferedReader.ready()){
             stringBuilder.append(bufferedReader.readLine()+"\n");
         }bufferedReader.close();

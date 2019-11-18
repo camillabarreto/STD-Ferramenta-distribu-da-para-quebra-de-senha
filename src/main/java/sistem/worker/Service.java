@@ -37,6 +37,7 @@ public class Service implements DistributedService{
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_dic.txt"));
         bufferedWriter.append(stringBuilder.toString());
         bufferedWriter.close();
+        System.out.println("......OK");
     }
 
     @Override
