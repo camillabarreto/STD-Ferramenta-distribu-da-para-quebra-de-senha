@@ -25,7 +25,7 @@ public class Worker {
 
     public static void main(String[] args) throws RemoteException, AlreadyBoundException, NotBoundException {
         if (args[0] != null) SERVER = args[0];
-        if (args[1] != null)PORT = Integer.parseInt(args[1]);
+        if (args[1] != null) PORT = Integer.parseInt(args[1]);
         searchRegistryService();
         offerDistributedObject();
         System.out.println("Servidor de QUEBRA DE SENHA pronto!\n");

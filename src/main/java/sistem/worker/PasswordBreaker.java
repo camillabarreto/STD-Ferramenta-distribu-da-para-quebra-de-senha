@@ -9,7 +9,7 @@ public class PasswordBreaker extends Thread {
         super.run();
         System.out.println("quebrando senha...");
         ProcessBuilder processBuilder = new ProcessBuilder();
-        processBuilder.command("john","senha_"+Worker.WORKERNAME+".txt");
+        processBuilder.command("john","senha_"+Worker.WORKERNAME+".txt", "--session="+Worker.WORKERNAME);
         try {
             Worker.process = processBuilder.start();
             BufferedReader reader = new BufferedReader(new InputStreamReader(Worker.process.getInputStream()));
@@ -36,8 +36,8 @@ public class PasswordBreaker extends Thread {
             System.out.println("\nExited with error code : " + exitCode);
 
             System.out.println("parando...");
-            Worker.workerStub.stopWork();
             Worker.masterStub.workFinished(Worker.WORKERNAME);
+            Worker.workerStub.stopWork();
 
         } catch (IOException e) {
             e.printStackTrace();

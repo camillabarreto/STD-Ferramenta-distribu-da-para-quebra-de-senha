@@ -14,7 +14,6 @@ public class Notification  implements DistributedNotification{
 
     @Override
     public void workFinished(String WORKERNAME) {
-        System.out.println("teste");
-        System.out.println(WORKERNAME + " finalizou a quebra de senha");
+        System.out.println("\n" + WORKERNAME + " finalizou a quebra de senha");
     }
 }
