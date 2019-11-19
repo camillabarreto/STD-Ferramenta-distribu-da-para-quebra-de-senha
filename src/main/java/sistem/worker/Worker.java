@@ -1,7 +1,7 @@
 package sistem.worker;
 import sistem.DistributedNotification;
 import sistem.DistributedService;
-import java.io.BufferedWriter;
+
 import java.rmi.AlreadyBoundException;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;

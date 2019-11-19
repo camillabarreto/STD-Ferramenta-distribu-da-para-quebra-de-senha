@@ -1,44 +1,51 @@
 package sistem.master;
+
 import sistem.DistributedNotification;
 import sistem.DistributedService;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.rmi.AlreadyBoundException;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.Scanner;
-import java.util.Vector;
 
 public class Master {
 
-    private static final String NAMEMASTER = "Master";
-    private static String SERVER = "127.0.0.1";
-    private static int PORT = 12346;
-    static ArrayList<DistributedService> workers = new ArrayList<>();
-    //static Vector<DistributedService> workers = new Vector<>();
-    static Registry registro = null;
+    private final String NAMEMASTER = "Master";
+    private String SERVER = "127.0.0.1";
+    private int PORT = 12346;
+    private ArrayList<DistributedService> workers = new ArrayList<>();
+    private Registry registro = null;
 
 
     public static void main(String[] args) throws IOException, AlreadyBoundException, InterruptedException {
-        if (args[0] != null) SERVER = args[0];
-        if (args[1] != null) PORT = Integer.parseInt(args[1]);
-        createRegistryService();
-        offerDistributedObject();
+        Master master = new Master();
+        if (args[0] != null) master.SERVER = args[0];
+        if (args[1] != null) master.PORT = Integer.parseInt(args[1]);
+        master.createRegistryService();
+        master.offerDistributedObject(master);
         System.out.println("Servidor de NOTIFICAÇÃO pronto!\n");
         System.out.println("Pressione CTRL + C para encerrar...");
-        userInterface();
+        master.userInterface();
     }
 
-    private static void createRegistryService() throws RemoteException {
+    public void add(String service) throws RemoteException, NotBoundException {
+        workers.add((DistributedService) registro.lookup(service));
+    }
+
+    private void createRegistryService() throws RemoteException {
         registro = LocateRegistry.createRegistry(PORT);
     }
 
-    private static void offerDistributedObject() throws RemoteException, AlreadyBoundException {
+    private void offerDistributedObject(Master master) throws RemoteException, AlreadyBoundException {
         // CRIANDO OBJETO DISTRIBUIDO
-        Notification n = new Notification();
+        Notification n = new Notification(master);
 
         // DEFININDO O HOSTNAME DO SERVIDOR
         System.setProperty("java.rmi.worker.hostname", SERVER);
@@ -48,7 +55,7 @@ public class Master {
         registro.bind(NAMEMASTER, stub_n);
     }
 
-    private static void userInterface() throws IOException, InterruptedException {
+    private void userInterface() throws IOException, InterruptedException {
         Scanner teclado = new Scanner(System.in);
         while (true) {
             System.out.println("(1) Para saber quantos processos estão online e seus respectivos status");
@@ -80,7 +87,8 @@ public class Master {
 
                     System.out.println("Escolha a OPÇÃO de quebra de senha : ");
                     System.out.println("(1) Dicionário");
-                    System.out.println("(2) Incremental");
+                    System.out.println("(2) Incremental: Min = 0 caracteres, Max = 5 caracteres");
+                    System.out.println("(3) Incremental: Min = 6 caracteres, Max = 6 caracteres");
                     op = teclado.next();
                     if(op.equals("1")){
                         System.out.println("Digite o CAMINHO COMPLETO para o arquivo de DICIONARIO");
@@ -108,7 +116,8 @@ public class Master {
                             System.out.println("\nPROCESSO : "+w.getName());
                             System.out.println("Escolha a OPÇÃO de quebra de senha : ");
                             System.out.println("(1) Dicionário");
-                            System.out.println("(2) Incremental");
+                            System.out.println("(2) Incremental: Min = 0 caracteres, Max = 5 caracteres");
+                            System.out.println("(3) Incremental: Min = 6 caracteres, Max = 6 caracteres");
                             op = teclado.next();
                             if(op.equals("1")){
                                 System.out.println("Digite o CAMINHO COMPLETO para o arquivo de DICIONARIO");
@@ -140,7 +149,7 @@ public class Master {
         }
     }
 
-    private static String workersOnline() throws RemoteException {
+    private String workersOnline() throws RemoteException {
         StringBuilder s = new StringBuilder();
         for(DistributedService d : workers){
             s.append(d.getName() + " : ");
@@ -150,7 +159,7 @@ public class Master {
         return s.toString();
     }
 
-    private static String isWorking(boolean op) throws RemoteException {
+    private String isWorking(boolean op) throws RemoteException {
         StringBuilder s = new StringBuilder();
         for(DistributedService d : workers){
             if(d.isWorkingStatus() == op){
@@ -160,7 +169,7 @@ public class Master {
         return s.toString();
     }
 
-    private static void sendWork(String process, String passwordPath, String op) throws IOException {
+    private void sendWork(String process, String passwordPath, String op) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(passwordPath));
         while(bufferedReader.ready()){
@@ -175,7 +184,7 @@ public class Master {
         }
     }
 
-    private static void stopWork(String op) throws RemoteException, InterruptedException {
+    private void stopWork(String op) throws RemoteException, InterruptedException {
         if(op.equals("all")){
             for(DistributedService d : workers){
                 if(d.isWorkingStatus()){
@@ -191,7 +200,7 @@ public class Master {
         }
     }
 
-    private static void sendDictionaryFile(String process, String dictionaryPath) throws IOException {
+    private void sendDictionaryFile(String process, String dictionaryPath) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new FileReader(dictionaryPath));
         while(bufferedReader.ready()){

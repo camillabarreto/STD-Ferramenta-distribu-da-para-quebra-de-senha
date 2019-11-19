@@ -1,11 +1,20 @@
 package sistem.worker;
+
 import sistem.DistributedService;
-import java.io.*;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 public class Service implements DistributedService{
     private boolean workingStatus = false;
     private String serviceName;
-    private String operationMode;  //   (1)dicionário, (2)incremental
+    private String operationMode;
+    /*
+     * operationMode = 1 -> Dicionário
+     * operationMode = 2 -> Incremental: Min = 0 caracteres, Max = 5 caracteres,
+     * operationMode = 3 -> Incremental: Min = 6 caracteres, Max = 6 caracteres
+     * */
 
     public Service(String serviceName) {
         this.serviceName = serviceName;
@@ -15,11 +24,9 @@ public class Service implements DistributedService{
     public void sendWork(StringBuilder stringBuilder, String op) throws IOException {
         this.operationMode = op;
 
-        System.out.println("......recebendo arquivo de senhas");
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_senhas.txt"));
         bufferedWriter.append(stringBuilder.toString());
         bufferedWriter.close();
-        System.out.println("......OK");
 
         //DISPARANDO UMA THREAD PARA QUEBRA DE SENHA
         Worker.passwordBreaker = new PasswordBreaker();
@@ -37,11 +44,9 @@ public class Service implements DistributedService{
 
     @Override
     public void sendDictionary(StringBuilder stringBuilder) throws IOException {
-        System.out.println("......recebendo dicionario");
         BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(Worker.WORKERNAME+"_dic.txt"));
         bufferedWriter.append(stringBuilder.toString());
         bufferedWriter.close();
-        System.out.println("......OK");
     }
 
     @Override
