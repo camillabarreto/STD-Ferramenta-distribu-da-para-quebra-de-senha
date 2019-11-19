@@ -2,7 +2,7 @@
 
 **Descrição**
 
-O cenário descrito será composto 1 processo mestre (Master) e 3 processos trabalhadores (Worker).
+O cenário descrito será composto por um processo mestre (Master) e três processos trabalhadores (Worker). O serviço de registro RMI executará no endereço IP 127.0.0.1 na porta 12346. Cada processo Worker ficará responsável por quebrar as senhas em um dos modos de operação: Dicionário, Incremental (Min = 0 caracteres, Max = 5 caracteres) ou Incremental (Min = 6 caracteres, Max = 6 caracteres).
 
 **Elementos (Processos):**
 
@@ -12,12 +12,20 @@ O cenário descrito será composto 1 processo mestre (Master) e 3 processos trab
 
 **Passo a passo para iniciar o sistema distribído:**
 
-- 1º : Iniciar 1 processo com o código Master. OBS: Deve ser adicionado 2 argumentos de linha que serão necessários para a criação do serviço de registro RMI, onde args[0] deve ser o endereço IP e args[1] a porta.
+- Faça o clone do repositório na sua máquina.
 
-- 2º : Iniciar 3 processos com o código Worker. OBS: Deve ser adicionado 2 argumentos de linha que serão necessários para buscar o serviço de registro RMI, onde args[0] deve ser o endereço IP e args[1] a porta.
+- Abra 4 terminais e em todos eles entre no diretório: 2019-02-projeto-pratico-01-camillabarreto/build/libs/
 
-- 3º : Em cada processo Worker será solicitado um nome para identificação. OBS: Os nomes atribuídos nos processos devem ser distintos.
+- Escolha o terminal que executará o processo Master e execute o comando: java -jar std-1.0.jar 127.0.0.1 12346
 
-- 4º : No código Master será exibido um menu de iteração com o usuário onde será possível saber quem são os Workers conectados e seus respectivos status.
+- Os outros 3 terminais devem executar um processo Worker com o comando: java -cp std-1.0.jar sistem.worker.Worker 127.0.0.1 12346
 
-- 5º : Para enviar tarefas para todos os Workers escolha a opção (3) no menu e preencha os dados solicitados.
+- Em cada processo Worker será solicitado um nome para identificação. OBS: Os nomes atribuídos nos processos devem ser distintos.
+
+- No processo Master será exibido um menu de iteração com o usuário onde será possível saber quem são os Workers conectados e seus respectivos status.
+
+- Para enviar tarefas para todos os Workers escolha a opção (3) no menu e preencha os dados solicitados. OBS: lembre-se de escolher um modo de operação diferente para cada processo.
+
+- Quando os processos Worker finalizarem a tarefa de quebra de senha o processo Master será notificado.
+
+- Para interromper os processos Worker escolha a opção (4).
