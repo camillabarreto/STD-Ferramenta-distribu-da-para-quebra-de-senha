@@ -22,10 +22,10 @@ O cenário descrito será composto por um processo mestre (Master) e três proce
 
 - Em cada processo Worker será solicitado um nome para identificação. OBS: Os nomes atribuídos nos processos devem ser distintos.
 
-- No processo Master será exibido um menu de iteração com o usuário onde será possível saber quem são os Workers conectados e seus respectivos status.
+- No processo Master será exibido um menu de iteração com o usuário onde será possível saber quem são os Workers conectados e seus respectivos status através da opção (1).
 
 - Para enviar tarefas para todos os Workers escolha a opção (3) no menu e preencha os dados solicitados. OBS: lembre-se de escolher um modo de operação diferente para cada processo.
 
-- Quando os processos Worker finalizarem a tarefa de quebra de senha o processo Master será notificado.
+- Quando os processos Workers finalizarem a tarefa de quebra de senha o processo Master será notificado.
 
-- Para interromper os processos Worker escolha a opção (4).
+- Para interromper os processos Workers escolha a opção (4).
